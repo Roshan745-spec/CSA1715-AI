@@ -1,0 +1,18 @@
+# Python equivalent of the Prolog recursive sum algorithm
+def prolog_sum(n):
+    # Base case: sum(0, 0).
+    if n == 0:
+        return 0
+    # Recursive rule: sum(N, S) :- N > 0, N1 is N - 1, sum(N1, S1), S is S1 + N.
+    elif n > 0:
+        n1 = n - 1
+        s1 = prolog_sum(n1)
+        s = s1 + n
+        return s
+    else:
+        raise ValueError("N must be greater than or equal to 0")
+
+# Calculate the sum for N = 5
+n_val = 5
+result = prolog_sum(n_val)
+print(f"The sum from 1 to {n_val} is {result}")
