@@ -1,0 +1,39 @@
+class PlanetarySystem:
+    def __init__(self):
+        # Facts: name -> (PositionFromSun, Type, NumberOfMoons)
+        self.planets = {
+            'mercury': (1, 'rocky', 0),
+            'venus': (2, 'rocky', 0),
+            'earth': (3, 'rocky', 1),
+            'mars': (4, 'rocky', 2),
+            'jupiter': (5, 'gas_giant', 95),
+            'saturn': (6, 'gas_giant', 146),
+            'uranus': (7, 'ice_giant', 28),
+            'neptune': (8, 'ice_giant', 16)
+        }
+
+    # Rule: gas_giant(P) :- planet(P, _, gas_giant, _).
+    def is_gas_giant(self, planet):
+        return planet in self.planets and self.planets[planet][1] == 'gas_giant'
+
+    # Rule: has_moons(P) :- planet(P, _, _, M), M > 0.
+    def has_moons(self, planet):
+        return planet in self.planets and self.planets[planet][2] > 0
+
+    # Rule: closer_than(P1, P2) :- planet(P1, A, _, _), planet(P2, B, _, _), A < B.
+    def is_closer_than(self, p1, p2):
+        if p1 in self.planets and p2 in self.planets:
+            return self.planets[p1][0] < self.planets[p2][0]
+        return False
+
+    # Rule: rocky_planets(L) :- findall(P, planet(P, _, rocky, _), L).
+    def get_rocky_planets(self):
+        return [p for p, data in self.planets.items() if data[1] == 'rocky']
+
+system = PlanetarySystem()
+
+# Query and output testing
+print("Is Jupiter a gas giant?", system.is_gas_giant('jupiter'))
+print("Does Venus have moons?", system.has_moons('venus'))
+print("Is Earth closer to the Sun than Mars?", system.is_closer_than('earth', 'mars'))
+print("Rocky Planets:", system.get_rocky_planets())
