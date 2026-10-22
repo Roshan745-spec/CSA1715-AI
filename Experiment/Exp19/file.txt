@@ -1,0 +1,67 @@
+# Python translation of the Prolog School Knowledge Base
+
+# Facts: subject(Code, Name)
+subjects = {
+    'csa17': 'Artificial Intelligence',
+    'csa07': 'Computer Networks',
+    'dsa03': 'Natural Language Processing'
+}
+
+# Facts: teaches(Teacher, Code)
+teaches_relations = [
+    ('jai', 'csa17'),
+    ('meena', 'csa07'),
+    ('ravi', 'dsa03')
+]
+
+# Facts: studies(Student, Code)
+studies_relations = [
+    ('anu', 'csa17'),
+    ('anu', 'dsa03'),
+    ('kiran', 'csa17'),
+    ('latha', 'csa07')
+]
+
+# Rule: taught_by(Student, Teacher) :- studies(Student, Code), teaches(Teacher, Code).
+def taught_by(student, teacher):
+    for s_student, s_code in studies_relations:
+        if s_student == student:
+            for t_teacher, t_code in teaches_relations:
+                if t_teacher == teacher and s_code == t_code:
+                    return True
+    return False
+
+# Rule: students_of(Teacher, Student) :- teaches(Teacher, Code), studies(Student, Code).
+def students_of(teacher):
+    students = []
+    for t_teacher, t_code in teaches_relations:
+        if t_teacher == teacher:
+            for s_student, s_code in studies_relations:
+                if s_code == t_code:
+                    students.append(s_student)
+    return students
+
+# Rule: classmates(S1, S2) :- studies(S1, Code), studies(S2, Code), S1 \= S2.
+def classmates(student):
+    friends = set()
+    for s_student, s_code in studies_relations:
+        if s_student == student:
+            for other_student, other_code in studies_relations:
+                if other_student != student and other_code == s_code:
+                    friends.add(other_student)
+    return list(friends)
+
+# Rule: subject_name_of(Student, Name) :- studies(Student, Code), subject(Code, Name).
+def subject_name_of(student):
+    names = []
+    for s_student, s_code in studies_relations:
+        if s_student == student:
+            if s_code in subjects:
+                names.append(subjects[s_code])
+    return names
+
+# Test Queries
+print("Anu is taught by Jai:", taught_by('anu', 'jai'))
+print("Students of Jai:", students_of('jai'))
+print("Classmates of Kiran:", classmates('kiran'))
+print("Subjects studied by Anu:", subject_name_of('anu'))
